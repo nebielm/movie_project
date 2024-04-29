@@ -21,14 +21,14 @@ def write_file(file, python_obj):
         json.dump(python_obj, json_data)
 
 
-def add_movie(title, year, rating):
+def add_movie(title, year, rating, poster):
     """
     Adds a movie to the movies database.
     Loads the information from the JSON file, add the movie,
     and saves it. The function doesn't need to validate the input.
     """
     movie_data = read_file(file)
-    movie_data[title] = {"rating": rating, "year": year}
+    movie_data[title] = {"rating": rating, "year": year, "poster": poster}
     write_file(file, movie_data)
 
 

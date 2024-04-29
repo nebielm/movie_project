@@ -1,12 +1,12 @@
 from statistics import median
 from random import choice
-import datetime
 import movie_storage
+import requests
 
 
 FILE = "data.json"
-FIRST_MOVIE_YEAR = 1888
-current_year = datetime.datetime.now().year
+API_KEY = "2f8ef11f"
+API_URL = f"https://www.omdbapi.com/?apikey={API_KEY}&t="
 
 
 def main():
@@ -72,37 +72,26 @@ def add_movie():
             print("You've entered nothing. Try again")
         else:
             break
-    if new_title in movies:
-        print(f"{new_title} already in Database")
+    try:
+        res = requests.get(API_URL + new_title)
+        movie_dict = res.json()
+    except Exception:
+        print("It seems your have no internet connection."
+              " Try again later.")
         input("\nTo return to menu press Enter.")
         return movies
-    while True:
-        try:
-            new_rating = round(float(input("Enter rating between 0 - 10 "
-                                           "(Example: '5' or '5.5'): ")), 1)
-            while 0.0 <= new_rating <= 10.0:
-                try:
-                    new_year = int(input(f"The first movie was created in "
-                                         f"year {FIRST_MOVIE_YEAR}. "
-                                         f"Enter year between " 
-                                         f"{FIRST_MOVIE_YEAR} and "
-                                         f"{current_year} (Example: '2001'): "))
-                    if FIRST_MOVIE_YEAR > new_year or new_year > current_year:
-                        print("The year you've entered is not between "
-                              f"{FIRST_MOVIE_YEAR} and {current_year}. " 
-                              "Try again.")
-                        continue
-                    break
-                except Exception:
-                    print("You've entered an invalid year. Try again.")
-            else:
-                print("The rating you've entered is not between 0 and 10. "
-                      "Try again.")
-                continue
-            break
-        except Exception:
-            print("You've entered an invalid rating. Try again.")
-    movie_storage.add_movie(new_title, new_year, new_rating)
+    if movie_dict["Response"] == "False":
+        print(f"Movie with the title {new_title} does not exist.")
+        input("\nTo return to menu press Enter.")
+        return movies
+    elif movie_dict["Title"] in movies:
+        print(f"{movie_dict["Title"]} already in Database")
+        input("\nTo return to menu press Enter.")
+        return movies
+    new_title, new_year, new_rating, new_poster = (
+        movie_dict["Title"], int(movie_dict["Year"]),
+        float(movie_dict["Ratings"][0]["Value"][:-3]), movie_dict["Poster"])
+    movie_storage.add_movie(new_title, new_year, new_rating, new_poster)
     print(f"Movie '{new_title}' successfully added to List.")
     input("\nTo return to menu press Enter.")
     return movies
