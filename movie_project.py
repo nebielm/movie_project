@@ -9,17 +9,6 @@ API_KEY = "2f8ef11f"
 API_URL = f"https://www.omdbapi.com/?apikey={API_KEY}&t="
 
 
-def main():
-    """Create a while loop so that the program execute the
-       function according to users choice"""
-    while True:
-        print()
-        command_input, menu_list = menu()
-        menu_list[command_input]["execute"]()
-        if command_input == 0:
-            break
-
-
 def menu():
     """Create and print the menu for user to choose between
        different commands and let the user choose a command
@@ -34,7 +23,9 @@ def menu():
       {"show": "Status", "execute": status},
       {"show": "Random movie", "execute": random_movie},
       {"show": "Search movie", "execute": search_movie},
-      {"show": "Movies sorted by rating", "execute": mov_sort_by_rate}
+      {"show": "Movies sorted by rating", "execute": mov_sort_by_rate},
+      {"show": "Generate website", "execute": generate_website}
+
     ]
     print("Menu:")
     for num, option in enumerate(menu_list):
@@ -214,6 +205,44 @@ def mov_sort_by_rate():
     for movie, info in movies_sorted.items():
         print(f"{info['rating']}: {movie} ({info['year']})")
     input("\nTo return to the menu press Enter.")
+
+
+def generate_website():
+    movies = movie_storage.read_file(FILE)
+    with open("index_template.html", "r") as fileobj:
+        index_templ = fileobj.read()
+    title = "NEBIEL'S MOVIE APP"
+    movie_grid = ""
+    for movie in movies:
+        movie_grid += (f'           <li class="movie">\n'
+                       f'               <div class="movie-poster">\n'
+                       f'                   '
+                       f'<img src="{movies[movie]["poster"]}" alt="{movie}">\n'
+                       f'               </div>\n'
+                       f'               <div class="movie-title">\n'
+                       f'                   {movie}\n'
+                       f'               </div>\n'
+                       f'               <div class="movie-year">\n'
+                       f'                   {movies[movie]["year"]}\n'
+                       f'               </div>\n'
+                       f'           </li>\n')
+    first_step = index_templ.replace("__TEMPLATE_TITLE__", title)
+    final_output = first_step.replace("        __TEMPLATE_MOVIE_GRID__",
+                                      movie_grid)
+    with open("index.html", "w") as fileobj:
+        fileobj.write(final_output)
+        print("Website was generated successfully.")
+
+
+def main():
+    """Create a while loop so that the program execute the
+       function according to users choice"""
+    while True:
+        print()
+        command_input, menu_list = menu()
+        menu_list[command_input]["execute"]()
+        if command_input == 0:
+            break
 
 
 if __name__ == "__main__":
