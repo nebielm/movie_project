@@ -214,16 +214,11 @@ def generate_website():
     title = "NEBIEL'S MOVIE APP"
     movie_grid = ""
     for movie in movies:
-        movie_grid += (f'           <li class="movie">\n'
-                       f'               <div class="movie-poster">\n'
-                       f'                   '
-                       f'<img src="{movies[movie]["poster"]}" alt="{movie}">\n'
-                       f'               </div>\n'
-                       f'               <div class="movie-title">\n'
-                       f'                   {movie}\n'
-                       f'               </div>\n'
-                       f'               <div class="movie-year">\n'
-                       f'                   {movies[movie]["year"]}\n'
+        movie_grid += (f'           <li>\n'
+                       f'               <div class="movie">\n'
+                       f'                   <img class="movie-poster" src="{movies[movie]["poster"]}" alt="{movie}">\n'
+                       f'                   <div class="movie-title">{movie}</div>\n'
+                       f'                   <div class="movie-year">{movies[movie]["year"]}</div>\n'
                        f'               </div>\n'
                        f'           </li>\n')
     first_step = index_templ.replace("__TEMPLATE_TITLE__", title)
