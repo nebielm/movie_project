@@ -209,9 +209,16 @@ def generate_website():
     for movie in movies:
         movie_grid += (f'           <li>\n'
                        f'               <div class="movie">\n'
-                       f'                   <img class="movie-poster" src="{movies[movie]["poster"]}" alt="{movie}" title="{movies[movie].get("note", "N/A")}">'
+                       f'                   <img class="movie-poster" src="{movies[movie]["poster"]}" '
+                       f'alt="{movie}" title="{movies[movie].get("note", "N/A")}\n">'
                        f'                   <div class="movie-title">{movie}</div>\n'
                        f'                   <div class="movie-year">{movies[movie]["year"]}</div>\n'
+                       f'                   <div class ="rating-bar">\n'
+                       f'                       <div class="movie-rating" style="width: '
+                       f'{(movies[movie]["rating"])*10}%;">\n'
+                       f'                           <span>{movies[movie]["rating"]}/10</span>\n'
+                       f'                       </div>\n'
+                       f'                   </div>\n'
                        f'               </div>\n'
                        f'           </li>\n')
     first_step = index_templ.replace("__TEMPLATE_TITLE__", title)
