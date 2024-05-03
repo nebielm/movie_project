@@ -43,12 +43,12 @@ def delete_movie(title):
     write_file(file, movie_data)
 
 
-def update_movie(title, rating):
+def update_movie(title, movie_note):
     """
     Updates a movie from the movies database.
     Loads the information from the JSON file, updates the movie,
     and saves it. The function doesn't need to validate the input.
     """
     movie_data = read_file(file)
-    movie_data[title]["rating"] = rating
+    movie_data[title]["note"] = movie_note
     write_file(file, movie_data)

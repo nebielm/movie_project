@@ -122,18 +122,11 @@ def update_movie():
     for movie in movies.keys():
         if update_movie_input.lower() == movie.lower():
             while True:
-                try:
-                    new_rating = round(float(input("Enter rating between "
-                                                   "0 - 10 (Example: '5' or "
-                                                   "'5.5'): ")), 1)
-                    if 0.0 <= new_rating <= 10.0:
-                        break
-                    print("The rating you've entered is not "
-                          "between 0 and 10. Try again.")
-                    continue
-                except Exception:
-                    print("You've entered an invalid rating. Try again.")
-            movie_storage.update_movie(movie, new_rating)
+                movie_note = input("Enter movie notes:  ")
+                if len(movie_note) > 0:
+                    break
+                print("You've entered nothing. Try again")
+            movie_storage.update_movie(movie, movie_note)
             print(f"Movie '{movie}' successfully updated.")
             input("\nTo return to menu press Enter.")
             return movies
@@ -216,7 +209,7 @@ def generate_website():
     for movie in movies:
         movie_grid += (f'           <li>\n'
                        f'               <div class="movie">\n'
-                       f'                   <img class="movie-poster" src="{movies[movie]["poster"]}" alt="{movie}">\n'
+                       f'                   <img class="movie-poster" src="{movies[movie]["poster"]}" alt="{movie}" title="{movies[movie].get("note", "N/A")}">'
                        f'                   <div class="movie-title">{movie}</div>\n'
                        f'                   <div class="movie-year">{movies[movie]["year"]}</div>\n'
                        f'               </div>\n'
