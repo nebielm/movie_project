@@ -2,11 +2,13 @@ from statistics import median
 from random import choice
 import movie_storage
 import requests
+import pycountry
 
 
 FILE = "data.json"
 API_KEY = "2f8ef11f"
 API_URL = f"https://www.omdbapi.com/?apikey={API_KEY}&t="
+FLAGS_API_BASE = f"https://flagsapi.com/"
 
 
 def menu():
@@ -79,10 +81,15 @@ def add_movie():
         print(f"{movie_dict["Title"]} already in Database")
         input("\nTo return to menu press Enter.")
         return movies
-    new_title, new_year, new_rating, new_poster, imbd_id = (
+    origin = movie_dict["Country"].split(",")
+    origin_code_list = []
+    for country in origin:
+        origin_code_list.append((pycountry.countries.get(name=country.lstrip())).alpha_2)
+    new_title, new_year, new_rating, new_poster, imbd_id, = (
         movie_dict["Title"], int(movie_dict["Year"]),
-        float(movie_dict["Ratings"][0]["Value"][:-3]), movie_dict["Poster"], movie_dict["imdbID"])
-    movie_storage.add_movie(new_title, new_year, new_rating, new_poster, imbd_id)
+        float(movie_dict["Ratings"][0]["Value"][:-3]), movie_dict["Poster"],
+        movie_dict["imdbID"])
+    movie_storage.add_movie(new_title, new_year, new_rating, new_poster, imbd_id, origin_code_list)
     print(f"Movie '{new_title}' successfully added to List.")
     input("\nTo return to menu press Enter.")
     return movies
@@ -213,7 +220,9 @@ def generate_website():
                        f'                       <img class="movie-poster" src="{movies[movie]["poster"]}" '
                        f'alt="{movie}" title="{movies[movie].get("note", "N/A")}">\n'
                        f'                   </a>\n'
-                       f'                   <div class="movie-title">{movie}</div>\n'
+                       f'                   <div class="movie-title">{movie}\n'
+                       f'                       <img src="{FLAGS_API_BASE + movies[movie]["origin/s"][0] + "/shiny/16.png"}" alt="{movies[movie]["origin/s"][0]}">\n'
+                       f'                   </div>\n'
                        f'                   <div class="movie-year">{movies[movie]["year"]}</div>\n'
                        f'                   <div class ="rating-bar">\n'
                        f'                       <div class="movie-rating" style="width: '
