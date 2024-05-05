@@ -79,10 +79,10 @@ def add_movie():
         print(f"{movie_dict["Title"]} already in Database")
         input("\nTo return to menu press Enter.")
         return movies
-    new_title, new_year, new_rating, new_poster = (
+    new_title, new_year, new_rating, new_poster, imbd_id = (
         movie_dict["Title"], int(movie_dict["Year"]),
-        float(movie_dict["Ratings"][0]["Value"][:-3]), movie_dict["Poster"])
-    movie_storage.add_movie(new_title, new_year, new_rating, new_poster)
+        float(movie_dict["Ratings"][0]["Value"][:-3]), movie_dict["Poster"], movie_dict["imdbID"])
+    movie_storage.add_movie(new_title, new_year, new_rating, new_poster, imbd_id)
     print(f"Movie '{new_title}' successfully added to List.")
     input("\nTo return to menu press Enter.")
     return movies
@@ -209,8 +209,10 @@ def generate_website():
     for movie in movies:
         movie_grid += (f'           <li>\n'
                        f'               <div class="movie">\n'
-                       f'                   <img class="movie-poster" src="{movies[movie]["poster"]}" '
-                       f'alt="{movie}" title="{movies[movie].get("note", "N/A")}\n">'
+                       f'                   <a href="https://www.imdb.com/title/{movies[movie]["imdbID"]}/" target="_blank">\n'
+                       f'                       <img class="movie-poster" src="{movies[movie]["poster"]}" '
+                       f'alt="{movie}" title="{movies[movie].get("note", "N/A")}">\n'
+                       f'                   </a>\n'
                        f'                   <div class="movie-title">{movie}</div>\n'
                        f'                   <div class="movie-year">{movies[movie]["year"]}</div>\n'
                        f'                   <div class ="rating-bar">\n'
